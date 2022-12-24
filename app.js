@@ -1,6 +1,6 @@
 const getMatricNo = require("./controllers/botconvos.js");
 const controllers = require("./controllers/responses.js");
-const botConfig = require("./config/botconfig.json");
+const botConfig = require("./config/botconfig1.json");
 const convos = require("@grammyjs/conversations");
 const express = require("express");
 const grammy = require("grammy");
@@ -26,10 +26,11 @@ bot.use(convos.createConversation(getMatricNo))
 //start command 
 bot.command("start", controllers.startResponse);
 
-
 //settings command
 bot.command("settings", controllers.settingsResponse);
 
+//only command
+bot.command("mypicture", async (ctx)=> ctx.conversation.enter("getMatricNo"));
 
 bot.callbackQuery("picture", async (ctx)=> ctx.conversation.enter("getMatricNo"));
 
@@ -48,6 +49,6 @@ app.post("/bottest", grammy.webhookCallback(bot, "express"));
 
 app.listen(3000, async ()=> {
     //self explanatory.
-    await bot.api.setWebhook("https://77d4-105-112-162-113.eu.ngrok.io/bottest");
+    await bot.api.setWebhook("https://0a53-105-112-162-113.eu.ngrok.io/bottest");
     console.log("running on port 3000");
 });
