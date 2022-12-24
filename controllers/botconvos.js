@@ -1,4 +1,4 @@
-const convoPicUrl = require("./utils/downloadUrl.js");
+const convoPicUrl = require("../utils/downloadUrl.js");
 
 async function getMatricNo(conversation, ctx) {
     await ctx.reply("Tell me your matriculaion number");

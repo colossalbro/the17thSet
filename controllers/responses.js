@@ -1,4 +1,4 @@
-const buttons = require("./buttons.js")
+const buttons = require("../utils/buttons.js")
 
 const notFound = (ctx) => {
     const greetings = ["hi", "hello", "hey", "yo", "how far", "how fa", "hw fa", "sup"];
