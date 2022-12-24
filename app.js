@@ -1,87 +1,53 @@
+const getMatricNo = require("./controllers/botconvos.js");
+const controllers = require("./controllers/responses.js");
+const botConfig = require("./config/botconfig.json");
 const convos = require("@grammyjs/conversations");
-const grammy = require("grammy");
-const myKeys = require("./controllers/mainkeyboard.js");
-const convoPicUrl = require("./utils/downloadUrl.js");
 const express = require("express");
+const grammy = require("grammy");
 
-//import { Bot, webhookCallback, session } from "grammy";
-//import {pictureKey, tryAgain} from './controllers/mainkeyboard.js'
-//import convoPicUrl from "./utils/downloadUrl.js";
-//import express from "express";
-
-const pictureKey = myKeys.pictureKey
-const tryAgain = myKeys.tryAgain;
-
+//start express
 const app = express();
 
-const bot = new grammy.Bot("5877259269:AAH0AyH6N90sy8ZgVlWA8ZMdOyr0wpSFMvc");
+//start bot
+const botkey = botConfig.botApiKey;
+const bot = new grammy.Bot(botkey);
 
-bot.use(grammy.session( {initial: ()=>({}) }));
+//bot middleware (similar to express)
+bot.use(grammy.session( {initial: ()=>({}) })); //honestly don't know why, but this is what was in the docs
+
 
 bot.use(convos.conversations());
 
 
-async function getMatricNo(conversation, ctx) {
-    await ctx.reply("Tell me your matriculaion number");
-    var res = await conversation.waitFor(":text");
-    var matno = res.message.text.toLowerCase()
-
-    const matUrl = convoPicUrl(matno);
-
-    if (!matUrl) {
-        ctx.reply("Im sorry, i can't seem to find your picture. If I still can't find your picture after you try again \
-consider messaging @danieljesusegun", tryAgain());
-        return;
-    }
-    
-    ctx.reply("Checking....");
-
-    await ctx.api.sendDocument(ctx.chat.id, matUrl, {
-        disable_content_type_detection : true,
-        caption : "👌🏾"
-    });
-    
-    //await ctx.replyWithPhoto(new URL(matUrl));
-    
-    return ctx.reply("Here you go! ❤️");
-}
-
-
+//register conversation so other middleware can enter it.
 bot.use(convos.createConversation(getMatricNo))
 
 
-
-bot.command("start", (ctx) => {
-    ctx.reply(`Hello ${ctx.chat.first_name}, congratulations on your convocation`, pictureKey());
-});
+//start command 
+bot.command("start", controllers.startResponse);
 
 
-bot.command("settings", (ctx) => {
-    ctx.reply("I have no settings! My mission is to get you your convocation picture. Nothing else! 🫡", pictureKey())
-})
+//settings command
+bot.command("settings", controllers.settingsResponse);
 
 
 bot.callbackQuery("picture", async (ctx)=> ctx.conversation.enter("getMatricNo"));
 
 
-
-bot.use((ctx)=> {
-    const greetings = ["hi", "hello", "hey", "yo", "how far", "how fa", "hw fa", "sup"];
-    const {message} = ctx
-    if ( greetings.includes(message.text.toLowerCase()) ) {
-        return ctx.reply(`Hello ${ctx.chat.first_name}, congratulations on your convocation`, pictureKey());
-    }
-    ctx.reply(`I'm unable to understand what you mean by "${ctx.message.text}". \
-I am only able to get you your convocation picture. Lets begin 👇`, pictureKey());
-});
+//any other request that can't be handled by previous middleware.
+bot.use(controllers.notFound);
 
 
+//express middleware.
 app.use(express.json());
 
+
+//Exposed route that passes requests from telegram server to bot.
 app.post("/bottest", grammy.webhookCallback(bot, "express"));
 
 
 app.listen(3000, async ()=> {
+    //self explanatory.
     await bot.api.setWebhook("https://ee4d-105-112-162-113.eu.ngrok.io/bottest");
     console.log("running on port 3000");
 });
