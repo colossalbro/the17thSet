@@ -48,6 +48,6 @@ app.post("/bottest", grammy.webhookCallback(bot, "express"));
 
 app.listen(3000, async ()=> {
     //self explanatory.
-    await bot.api.setWebhook("https://ee4d-105-112-162-113.eu.ngrok.io/bottest");
+    await bot.api.setWebhook("https://77d4-105-112-162-113.eu.ngrok.io/bottest");
     console.log("running on port 3000");
 });

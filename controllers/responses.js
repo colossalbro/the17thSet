@@ -17,7 +17,7 @@ const settingsResponse = (ctx) => {
 
 
 const startResponse = (ctx) => {
-    ctx.reply(`Hello ${ctx.chat.first_name}, congratulations on your convocation`, pictureKey());
+    ctx.reply(`Hello ${ctx.chat.first_name}, congratulations on your convocation`, buttons.pictureKey());
 }
 
 exports.notFound = notFound;

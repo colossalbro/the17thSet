@@ -13,7 +13,7 @@ consider messaging @danieljesusegun", tryAgain());
         return;
     }
     
-    ctx.reply("Checking....");
+    await ctx.reply("Checking....");
 
     await ctx.api.sendDocument(ctx.chat.id, matUrl, {
         disable_content_type_detection : true,
