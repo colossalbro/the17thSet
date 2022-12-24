@@ -1,6 +1,6 @@
 const getMatricNo = require("./controllers/botconvos.js");
 const controllers = require("./controllers/responses.js");
-const botConfig = require("./config/botconfig1.json");
+const botConfig = require("./config/botconfig.json");
 const convos = require("@grammyjs/conversations");
 const express = require("express");
 const grammy = require("grammy");
