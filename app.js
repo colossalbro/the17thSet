@@ -1,5 +1,6 @@
+const { apiThrottler } = require("@grammyjs/transformer-throttler");
 const getMatricNo = require("./controllers/botconvos.js");
-const controllers = require("./controllers/responses.js");
+const controllers = require("./controllers/responses.js"); 
 const botConfig = require("./config/botconfig.json");
 const convos = require("@grammyjs/conversations");
 const express = require("express");
@@ -26,29 +27,50 @@ bot.use(convos.createConversation(getMatricNo))
 //start command 
 bot.command("start", controllers.startResponse);
 
+
 //settings command
 bot.command("settings", controllers.settingsResponse);
 
 //only command
 bot.command("mypicture", async (ctx)=> ctx.conversation.enter("getMatricNo"));
 
-bot.callbackQuery("picture", async (ctx)=> ctx.conversation.enter("getMatricNo"));
+//when the "Get my picture button" is clicked.
+bot.callbackQuery("picture", async (ctx) => await ctx.conversation.enter("getMatricNo"));
+
+//error handler
+bot.catch((err) => {
+  const ctx = err.ctx;
+  console.error(`Error while handling update ${ctx.update.update_id}:`);
+  const e = err.error;
+  if (e instanceof grammy.GrammyError) {
+    console.error("Error in request:", e.description);
+  } else if (e instanceof grammy.HttpError) {
+    console.error("Could not contact Telegram:", e);
+  } else {
+    console.error("Unknown error:", e);
+  }
+});
 
 
 //any other request that can't be handled by previous middleware.
 bot.use(controllers.notFound);
-
 
 //express middleware.
 app.use(express.json());
 
 
 //Exposed route that passes requests from telegram server to bot.
-app.post("/bottest", grammy.webhookCallback(bot, "express"));
+app.get("/the17thset/", (req, res) => res.send("okay"));
+//app.post("/the17thset/bottest/", grammy.webhookCallback(bot, "express"));
 
 
-app.listen(3000, async ()=> {
-    //self explanatory.
-    await bot.api.setWebhook("https://0a53-105-112-162-113.eu.ngrok.io/bottest");
+app.use((req, res)=> res.send("alright"));
+
+app.use((err, req, res, next) => res.send({"Error" : true}));
+
+app.listen(3000, async () => {
+    //bot.api.deleteWebhook();
+    bot.start()
+    //await bot.api.setWebhook("https://lassoloc.co/the17thset/bottest/");
     console.log("running on port 3000");
 });
