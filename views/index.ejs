@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+    <title>Convocation Portrait</title>
+</head>
+<body>
+    <div class="background-image"></div>
+    <div class="search-bar">
+        <form action="/" method="get">
+            <input type="text" name="search" placeholder="Matriculation Number....">
+            <button type="submit">Search</button>
+        </form>
+    </div>
+
+    <script>
+        const form = document.querySelector('form');
+        const searchInput = document.querySelector('input[name="search"]');
+
+        form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const searchValue = searchInput.value.trim();
+        window.location.href = `/${searchValue}`;
+        });
+    </script>
+</body>
+</html>

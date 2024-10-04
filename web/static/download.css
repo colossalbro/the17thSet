@@ -1,0 +1,68 @@
+.background-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-image: url('/static/legacyset.jpg');
+    background-size: cover;
+    background-position: center;
+    /* Add a blur effect to the background image */
+    filter: blur(5px);
+    z-index: -1;
+}
+
+/* Style the download buttons container */
+.download-buttons {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 1;
+    text-decoration: none;
+}
+
+/* Style the download buttons */
+.download-button {
+    padding: 15px 30px;
+    font-size: 20px;
+    border: none;
+    border-radius: 10px;
+    background-color: #6A3093; /* Purple color */
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    text-decoration: none;
+    margin-right: 10px;
+}
+
+/* Media queries for mobile and tablet viewports */
+@media only screen and (max-width: 768px) {
+    .download-buttons {
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 80%;
+    }
+    .download-button {
+        padding: 10px 20px;
+        font-size: 16px;
+        margin-bottom: 15px;
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .download-buttons {
+        top: 30%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+    }
+    .download-button {
+        padding: 8px 15px;
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+}

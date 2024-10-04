@@ -1,33 +1,39 @@
-const convoPicUrl = require("../utils/downloadUrl.js");
+const {portraitLookup} = require("../utils/downloadUrl.js");
+const { default: PQueue } = require('@esm2cjs/p-queue');
 const {tryAgain} = require("../utils/buttons.js");
+const {InputFile} = require('grammy');
+const queue = require('../tasks.js');
 
 
 async function getMatricNo(conversation, ctx, next) {
     
-    await ctx.reply("Tell me your matriculaion number/name. If you're going to tell me your name, please make sure its in this format: surname firstname");
+    await ctx.reply("Tell me your matriculaion number");
     
     var res = await conversation.waitFor("msg");
     
-    var matno = res.message.text.toLowerCase()
+    var matno = res.message.text.toUpperCase();
 
-    const matUrl = convoPicUrl(matno);
+    const downloadLinks = portraitLookup(matno, true);
 
-    if (!matUrl) {
-        await ctx.reply("Im sorry, i can't seem to find your picture. If I still can't find your picture after you try again \
-consider messaging @danieljesusegun", tryAgain());
+    if (!downloadLinks) {
+        await ctx.reply(`No Portrait found for ${matno}. Please Try again.`, tryAgain());
         return;
     }
-    
-    await ctx.reply("checking ⏳");
+
+    await ctx.reply("Checking ⏳");
+    await ctx.reply("Hi! So I might take a little longer send your images but I promise, I wouldn't exceed 5 minutes.\
+        Bare with me, i'm doing my best 🥺");
 
     try{
-        await ctx.api.sendDocument(ctx.chat.id, matUrl, {
-            disable_content_type_detection : true,
-            caption : "Here you go! ❤"
-        });
-        
+        queue.q.add( () => queue.sendImage(ctx, downloadLinks) );
+        return
+
+        // downloadLinks.forEach(async link =>  {
+        //     queue.add( () => ctx.replyWithDocument( new InputFile(link) ) );
+        // })
+
     }catch(e) {
-        await ctx.reply(`${ctx.chat.first_name}, there seems to be an error downloading your potrait 🥺. Please message @danieljesusegun.`);
+        await ctx.reply(`${ctx.chat.first_name}, there seems to be an error downloading your potrait 🥺`);
         throw e;
     }
    

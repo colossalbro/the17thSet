@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/download.css">
+    <title>Download</title>
+</head>
+<body>
+    <div class="background-image"></div>
+    <div class="download-buttons">
+        <% if (Portraits.length > 0) { %>
+            <% Portraits.forEach(function(portait, index) { %>
+                <a href="<%= `download/${matno}/${portait}` %>" class="download-button">PORTRAIT <%= index + 1 %></a>
+            <% }); %>
+        <% } else { %>
+            <p>No Portraits Found</p>
+        <% } %>
+    </div>
+</body>
+</html>

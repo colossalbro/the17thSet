@@ -1,0 +1,77 @@
+.background-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-image: url('./legacyset.jpg');
+    background-size: cover;
+    background-position: center;
+    /* Add a blur effect to the background image */
+    filter: blur(5px);
+    z-index: -1;
+}
+
+/* Style the search bar container */
+.search-bar {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 1;
+}
+
+/* Style the input field and button */
+.search-bar input[type="text"] {
+    padding: 15px;
+    font-size: 20px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 10px;
+    width: 70%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.search-bar button[type="submit"] {
+    padding: 15px 30px;
+    font-size: 20px;
+    border: none;
+    border-radius: 10px;
+    margin-top: 15px;
+    background-color: #6A3093; /* Purple color */
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: inline-block;
+    vertical-align: middle;
+    /* Add a glossy effect */
+    background-image: linear-gradient(to bottom, #7B3BA4, #096450);
+    background-size: 100% 200px;
+    background-position: 0% 100%;
+}
+
+/* Add a border with a subtle gradient effect */
+.search-bar input[type="text"] {
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+    background-size: 100% 200px;
+    background-position: 0% 100%;
+}
+
+
+/* Make the search bar responsive */
+@media only screen and (max-width: 768px) {
+    .search-bar input[type="text"] {
+        width: 60%;
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .search-bar input[type="text"] {
+        width: 80%;
+    }
+}

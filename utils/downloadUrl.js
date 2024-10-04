@@ -1,20 +1,20 @@
-const data = require("../database/database.json")
+const database = require('../database/database.json')
+const url = require('../config/botconfig.json').domain
+const path = require('path');
 
-function convoPicUrl(matno) {
-    const comp = matno.slice(0, 4);
-    
-    if (comp === '17cg' || comp === '18cg') {
-        
-        const search = matno.slice(-3) + '.JPG';
+function portraitLookup(matno, bot) {
+    var diskLocations = database[matno]; 
 
-        if (data[search]) return data[search]
-    }
-    
-    const jpg = matno.toUpperCase() + '.JPG';
-    
-    if (data[jpg]) return data[jpg]
+    if (bot) return diskLocations;
 
-    return null 
+    return diskLocations.map(location => path.basename(location));
 }
 
-module.exports = convoPicUrl;
+function isMatno(matno) {
+    const regex = /^\d{2}[a-zA-Z]{2}\d{6}$/;        //matno regex
+
+    if (regex.test(matno)) return true;
+    else return false 
+}
+
+module.exports = { isMatno, portraitLookup };

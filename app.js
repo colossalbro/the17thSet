@@ -1,3 +1,4 @@
+const { isMatno, portraitLookup } = require('./utils/downloadUrl.js');
 const { apiThrottler } = require("@grammyjs/transformer-throttler");
 const getMatricNo = require("./controllers/botconvos.js");
 const controllers = require("./controllers/responses.js"); 
@@ -5,24 +6,24 @@ const botConfig = require("./config/botconfig.json");
 const convos = require("@grammyjs/conversations");
 const express = require("express");
 const grammy = require("grammy");
+const path = require('path');
 
-//start express
-const app = express();
 
-//start bot
+//######################
+//###  Telegram Bot  ###
+//######################
 const botkey = botConfig.botApiKey;
 const bot = new grammy.Bot(botkey);
 
-//bot middleware (similar to express)
+
+//bot middleware
 bot.use(grammy.session( {initial: ()=>({}) })); //honestly don't know why, but this is what was in the docs
 
 
 bot.use(convos.conversations());
 
-
 //register conversation so other middleware can enter it.
 bot.use(convos.createConversation(getMatricNo))
-
 
 //start command 
 bot.command("start", controllers.startResponse);
@@ -32,7 +33,7 @@ bot.command("start", controllers.startResponse);
 bot.command("settings", controllers.settingsResponse);
 
 //only command
-bot.command("mypicture", async (ctx)=> ctx.conversation.enter("getMatricNo"));
+bot.command("portraits", async (ctx)=> ctx.conversation.enter("getMatricNo"));
 
 //when the "Get my picture button" is clicked.
 bot.callbackQuery("picture", async (ctx) => await ctx.conversation.enter("getMatricNo"));
@@ -51,26 +52,68 @@ bot.catch((err) => {
   }
 });
 
-
 //any other request that can't be handled by previous middleware.
 bot.use(controllers.notFound);
 
-//express middleware.
-app.use(express.json());
 
 
-//Exposed route that passes requests from telegram server to bot.
-app.get("/the17thset/", (req, res) => res.send("okay"));
-//app.post("/the17thset/bottest/", grammy.webhookCallback(bot, "express"));
 
 
-app.use((req, res)=> res.send("alright"));
+
+
+
+//#################
+//###  EXPRESS  ###
+//#################
+const app = express();
+
+const database = require('./database/database.json')    //Load database file.
+
+app.set('view engine', 'ejs');
+
+app.set('views', './views');
+
+app.use('/static', express.static('web/static'));
+
+app.use('/download', express.static('Portraits/', {
+  index: false, 
+  download: true,
+  setHeaders: (res, path) => {
+    res.set('Content-Type', 'image/jpg')
+    //res.set("Content-Disposition", `attachment; filename="${path.split('/').pop()}"`);
+  }
+}));
+
+
+app.get('/', (req, res) => res.render('index'));
+
+
+app.get('/:matno', (req, res, next) => {
+  var temp = req.params.matno;
+
+  if (isMatno(temp)) {
+
+    const matno = temp.toUpperCase();
+    
+    var Portraits = portraitLookup(matno, false)
+
+    res.render('download', { matno, Portraits });
+
+  } else next();
+
+});
+
+
+app.use((req, res)=> res.redirect('/'));  //redirect to home 
 
 app.use((err, req, res, next) => res.send({"Error" : true}));
 
+
+
+
+// start bot and web server
+bot.start()   //Telegram bot
+
 app.listen(3000, async () => {
-    //bot.api.deleteWebhook();
-    bot.start()
-    //await bot.api.setWebhook("https://lassoloc.co/the17thset/bottest/");
     console.log("running on port 3000");
 });

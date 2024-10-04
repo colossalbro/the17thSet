@@ -3,7 +3,7 @@ const grammy = require("grammy");
 const InlineKeyboard = grammy.InlineKeyboard
 const pictureKey = function() {
     return {
-        'reply_markup': new InlineKeyboard().text('get my picture', 'picture')
+        'reply_markup': new InlineKeyboard().text('Get Portrait', 'picture')
     }
 }
 
