@@ -1,12 +1,10 @@
 const { isMatno, portraitLookup } = require('./utils/downloadUrl.js');
-const { apiThrottler } = require("@grammyjs/transformer-throttler");
 const getMatricNo = require("./controllers/botconvos.js");
 const controllers = require("./controllers/responses.js"); 
 const botConfig = require("./config/botconfig.json");
 const convos = require("@grammyjs/conversations");
 const express = require("express");
 const grammy = require("grammy");
-const path = require('path');
 
 
 //######################
