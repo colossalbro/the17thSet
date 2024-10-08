@@ -1,5 +1,4 @@
-const database = require('../database/database.json')
-const url = require('../config/botconfig.json').domain
+const database = require('../database/database.json');
 const path = require('path');
 
 function portraitLookup(matno, bot) {

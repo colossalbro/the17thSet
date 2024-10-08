@@ -28,10 +28,6 @@ bot.use(convos.createConversation(getMatricNo))
 //start command 
 bot.command("start", controllers.startResponse);
 
-
-//settings command
-bot.command("settings", controllers.settingsResponse);
-
 //only command
 bot.command("portraits", async (ctx)=> ctx.conversation.enter("getMatricNo"));
 
@@ -69,9 +65,9 @@ const app = express();
 
 const database = require('./database/database.json')    //Load database file.
 
-app.set('view engine', 'ejs');
+app.set('view engine', 'ejs');  //So we can use dynamic ejs
 
-app.set('views', './views');
+app.set('views', './views');  //where ejs looks for html files
 
 app.use('/static', express.static('web/static'));
 
@@ -80,7 +76,7 @@ app.use('/download', express.static('Portraits/', {
   download: true,
   setHeaders: (res, path) => {
     res.set('Content-Type', 'image/jpg')
-    //res.set("Content-Disposition", `attachment; filename="${path.split('/').pop()}"`);
+    res.set("Content-Disposition", `attachment; filename="${path.split('/').pop()}"`);
   }
 }));
 
@@ -112,7 +108,7 @@ app.use((err, req, res, next) => res.send({"Error" : true}));
 
 
 // start bot and web server
-bot.start()   //Telegram bot
+bot.start();
 
 app.listen(3000, async () => {
     console.log("running on port 3000");

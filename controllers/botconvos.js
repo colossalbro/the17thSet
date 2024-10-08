@@ -1,7 +1,5 @@
 const {portraitLookup} = require("../utils/downloadUrl.js");
-const { default: PQueue } = require('@esm2cjs/p-queue');
 const {tryAgain} = require("../utils/buttons.js");
-const {InputFile} = require('grammy');
 const queue = require('../tasks.js');
 
 
